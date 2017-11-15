@@ -4,23 +4,24 @@ class PostsController < ApplicationController
   end
 
   def new
-  @post = Post.new
-end
+    @post = Post.new
+  end
 
 def create
   @post = Post.new(post_params)
   if @post.save
     flash[:notice] = "Post successfully added!"
-    redirect_to  posts_path
+    redirect_to posts_path
   else
     render :new
   end
 end
 
-# def vote(post)
-#   post.liked_by @user
-#   render :index
-# end
+def show
+  @post = Post.find(params[:id])
+  @comment = @post.comments.new
+
+end
 
 def upvote
   @post= Post.find(params[:id])
@@ -35,5 +36,10 @@ def downvote
   @posts = Post.all
   redirect_to :posts
 end
+
+private
+  def post_params
+    params.require(:post).permit(:title, :posted_by, :url)
+  end
 
 end
